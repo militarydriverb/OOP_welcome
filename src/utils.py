@@ -5,7 +5,7 @@ from main import Category, Product
 
 
 def read_json(file: str) -> dict:
-    """Функция для чтения json файла"""
+    """Функция для чтения json файла."""
     full_file = os.path.abspath(file)
     with open(full_file, 'r', encoding='UTF-8') as f:
         data = json.load(f)

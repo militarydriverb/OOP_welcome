@@ -2,6 +2,7 @@ import pytest
 
 from src.main import Category, Product
 
+"""Создаем фикстуры для тестов"""
 
 @pytest.fixture
 def first_category():
