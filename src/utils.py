@@ -1,7 +1,7 @@
 import json
 import os
 
-from main import Category, Product
+from .models import Category, Product
 
 
 def read_json(file: str) -> dict:

@@ -1,4 +1,4 @@
-from src.main import Category
+from src.models import Category
 
 
 def test_category_init(first_category, second_category):

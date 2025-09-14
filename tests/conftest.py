@@ -1,8 +1,9 @@
 import pytest
 
-from src.main import Category, Product
+from src.models import Category, Product
 
 """Создаем фикстуры для тестов"""
+
 
 @pytest.fixture
 def first_category():
