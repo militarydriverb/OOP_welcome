@@ -9,8 +9,54 @@ class Product:
         """
         self.name = name
         self.description = description
-        self.price = price
+        self.__price = price
         self.quantity = quantity
+
+    @classmethod
+    def new_product(cls, product_dict: dict, existing_products: list):
+        """
+        Метод для создания экземпляра класса на основе словаря
+        При наличии товара с таким же именем:
+        - складывает количество
+        - выбирает максимальную цену
+        """
+        if existing_products:
+            for product in existing_products:
+                if product.name == product_dict["name"]:
+                    product.quantity += product_dict.get("quantity", 0)
+                    if product_dict.get("price", 0) > product.price:
+                        product.price = product_dict["price"]
+                    return product
+        return cls(**product_dict)
+
+    @property
+    def price(self):
+        """Метод для получения цены продукта"""
+        if self.__price > 0:
+            return self.__price
+        else:
+            return 0
+
+    @price.setter
+    def price(self, new_price):
+        """
+        Метод для установки цены продукта с проверкой
+        на нулевую или отрицательную цену
+        При понижении цены запрашивает подтверждение у пользователя.
+        """
+        if new_price <= 0:
+            print("Цена не должна быть нулевой или отрицательной")
+            return
+
+        if new_price < self.__price:
+            confirmation = input(
+                f"Вы хотите понизить цену {self.name} с {self.__price} "
+                f"до {new_price}? (y/n): ").strip().lower()
+            if confirmation != 'y':
+                print("Изменение цены отменено.")
+                return
+
+        self.__price = new_price
 
 
 class Category:
@@ -25,9 +71,35 @@ class Category:
         """
         self.name = name
         self.description = description
-        self.products = products
+        self.__products = products if products else []
         Category.category_count += 1
-        Category.product_count += len(products)
+        Category.product_count += len(products) if products else 0
+
+    def add_product(self, product: Product):
+        """Метод для создания экземпляра класса на основе словаря"""
+        if product not in self.__products:
+            self.__products.append(product)
+            Category.product_count += 1
+
+    @property
+    def products(self):
+        """ Метод для получения списка продуктов"""
+        products_str = ""
+        for product in self.__products:
+            products_str += (f"{product.name}, {product.price} руб. "
+                             f"Остаток: {product.quantity} шт.\n")
+        return products_str
+
+    # @products.setter
+    # def products(self, product: Product):
+    #     """Метод для создания экземпляра класса на основе словаря"""
+    #     if product not in self.__products:
+    #         self.__products.append(product)
+    #         Category.product_count += 1
+
+    @property
+    def products_in_list(self):
+        return self.__products
 
 
 if __name__ == "__main__":
@@ -39,46 +111,41 @@ if __name__ == "__main__":
     product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий",
                        31000.0, 14)  # pragma: no cover
 
-    print(product1.name)  # pragma: no cover
-    print(product1.description)  # pragma: no cover
-    print(product1.price)  # pragma: no cover
-    print(product1.quantity)  # pragma: no cover
+    category1 = Category(
+        "Смартфоны",
+        "Смартфоны, как средство не только коммуникации, "
+        "но и получения дополнительных функций для удобства жизни",
+        [product1, product2, product3]
+    )  # pragma: no cover
+    product_list = [product1, product2, product3,] # pragma: no cover
 
-    print(product2.name)  # pragma: no cover
-    print(product2.description)  # pragma: no cover
-    print(product2.price)  # pragma: no cover
-    print(product2.quantity)  # pragma: no cover
-
-    print(product3.name)  # pragma: no cover
-    print(product3.description)  # pragma: no cover
-    print(product3.price)  # pragma: no cover
-    print(product3.quantity)  # pragma: no cover
-
-    category1 = Category("Смартфоны",
-                         "Смартфоны, как средство не только"
-                         " коммуникации, но и получения дополнительных "
-                         "функций для удобства жизни",
-                         [product1, product2, product3]
-                         )  # pragma: no cover
-
-    print(category1.name == "Смартфоны")  # pragma: no cover
-    print(category1.description)  # pragma: no cover
-    print(len(category1.products))  # pragma: no cover
-    print(category1.category_count)  # pragma: no cover
-    print(category1.product_count)  # pragma: no cover
+    print(category1.products)# pragma: no cover
+    print(Category.category_count)  # pragma: no cover
+    print(category1.product_count) # pragma: no cover
 
     product4 = Product("55\" QLED 4K", "Фоновая подсветка",
                        123000.0, 7)  # pragma: no cover
-    category2 = Category("Телевизоры",
-                         "Современный телевизор, который позволяет "
-                         "наслаждаться просмотром, станет вашим другом и"
-                         " помощником",
-                         [product4])  # pragma: no cover
+    category1.add_product(product4)  # pragma: no cover
+    print(category1.products) # pragma: no cover
+    print(Category.category_count)  # pragma: no cover
+    print(category1.product_count) # pragma: no cover
 
-    print(category2.name)  # pragma: no cover
-    print(category2.description)  # pragma: no cover
-    print(len(category2.products))  # pragma: no cover
-    print(category2.products)  # pragma: no cover
+    new_product = Product.new_product(
+        {"name": "Samsung Galaxy S23 Ultra",
+         "description": "256GB, Серый цвет, 200MP камера",
+         "price": 180000.0, "quantity": 5}, product_list)  # pragma: no cover
+    print(new_product.name)  # pragma: no cover
+    print(new_product.description)  # pragma: no cover
+    print(new_product.price)  # pragma: no cover
+    print(new_product.quantity)  # pragma: no cover
+
+    new_product.price = 800  # pragma: no cover
+    print(new_product.price)  # pragma: no cover
+
+    new_product.price = -100  # pragma: no cover
+    print(new_product.price)  # pragma: no cover
+    new_product.price = 0  # pragma: no cover
+    print(new_product.price)  # pragma: no cover
 
     print(Category.category_count)  # pragma: no cover
     print(Category.product_count)  # pragma: no cover

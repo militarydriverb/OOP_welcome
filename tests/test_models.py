@@ -1,4 +1,5 @@
-from src.models import Category
+from src.models import Category, Product
+from tests.conftest import first_category, first_product, second_product, third_product, fourth_product
 
 
 def test_category_init(first_category, second_category):
@@ -8,15 +9,28 @@ def test_category_init(first_category, second_category):
                                           "коммуникации, но и получения "
                                           "дополнительных функций "
                                           "для удобства жизни")
-    assert first_category.products == ['product1', 'product2', 'product3']
-    assert len(first_category.products) == 3
+    assert first_category.products_in_list == ['product1', 'product2', 'product3']
+    assert len(first_category.products_in_list) == 3
 
     assert second_category.name == "Телевизоры"
     assert second_category.description == ("Современный телевизор, который "
                                            "позволяет наслаждаться просмотром,"
                                            " станет вашим другом и помощником")
-    assert second_category.products == ['product4']
-    assert len(second_category.products) == 1
+    assert second_category.products_in_list == ['product4']
+    assert len(second_category.products_in_list) == 1
+
+
+def test_category_products_property(first_category, second_category):
+    """Тест метода products — форматирование списка продуктов в виде строки."""
+    assert (first_category.products == "Samsung Galaxy S23 Ultra, 180000.0 руб. Остаток: 5 шт.\n"
+                                       "Iphone 15, 210000.0 руб. Остаток: 8 шт.\n"
+                                       "Xiaomi Redmi Note 11, 31000.0 руб. Остаток: 14 шт.\n")
+
+
+def test_add_product(first_category, first_product):
+    assert len(first_category.products_in_list) == 3
+    first_category.add_product = first_product
+    assert len(first_category.products_in_list) == 4
 
 
 def test_product_init(first_product, second_product):
@@ -30,9 +44,3 @@ def test_product_init(first_product, second_product):
     assert second_product.description == "512GB, Gray space"
     assert second_product.price == 210000.0
     assert second_product.quantity == 8
-
-
-def test_category_add_product_counter():
-    """Тест подсчета количества продуктов и категорий."""
-    assert Category.category_count == 2
-    assert Category.product_count == 4
