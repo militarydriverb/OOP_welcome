@@ -2,7 +2,7 @@ class Product:
     """Класс продукта"""
 
     def __init__(self, name: str, description: str, price: float,
-                 quantity: int):
+                 quantity: int, total_price: float = 0):
         """
         Метод для инициализации (конструктор) экземпляра класса.
         Задаем значения атрибутам экземплярам.
@@ -11,6 +11,7 @@ class Product:
         self.description = description
         self.__price = price
         self.quantity = quantity
+        self.total_price = total_price
 
     def __str__(self):
         """
@@ -29,8 +30,9 @@ class Product:
         возвращает сумму произведений цены на количество у двух объектов.
         """
         if isinstance(other, Product):
-            return (round(self.quantity * self.__price,) +
+            total_price = (round(self.quantity * self.__price,) +
                     round(other.quantity * other.__price,))
+            return total_price
         else:
             return NotImplemented
 
@@ -79,6 +81,29 @@ class Product:
                 return
 
         self.__price = new_price
+
+
+class ProductIterator:
+    """
+    Класс итератор для итерации по списку продуктов
+    """
+    def __init__(self, category_obj):
+        self.category = category_obj
+        self.index = 0
+
+    def __iter__(self):
+        self.index = 0
+        return self
+
+
+    def __next__(self):
+        if self.index < len(self.category.products_in_list):
+            product = self.category.products_in_list[self.index]
+            result = self.category.products_in_list[self.index]
+            self.index += 1
+            return product
+        else:
+            raise StopIteration
 
 
 class Category:
@@ -152,9 +177,9 @@ if __name__ == "__main__":
     product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий",
                        31000.0, 14)  # pragma: no cover
 
-    print(str(product1))
-    print(str(product2))
-    print(str(product3))
+    print(str(product1)) # pragma: no cover
+    print(str(product2)) # pragma: no cover
+    print(str(product3)) # pragma: no cover
 
     category1 = Category(
         "Смартфоны",
@@ -163,11 +188,18 @@ if __name__ == "__main__":
         [product1, product2, product3]
     )  # pragma: no cover
 
-print()
+print() # pragma: no cover
 print(str(category1))  # pragma: no cover
-print()
+print() # pragma: no cover
 print(category1.products)  # pragma: no cover
 
 print(product1 + product2)  # pragma: no cover
 print(product1 + product3)  # pragma: no cover
 print(product2 + product3)  # pragma: no cover
+print() # pragma: no cover
+
+iterator = ProductIterator(category1)  # pragma: no cover
+for product in iterator:  # pragma: no cover
+    print(product)
+    print()# pragma: no cover
+

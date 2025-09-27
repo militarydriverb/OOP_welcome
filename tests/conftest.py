@@ -2,6 +2,7 @@ import pytest
 
 from src.models import Category
 from src.models import Product
+from src.models import ProductIterator
 
 """Создаем фикстуры для тестов"""
 
@@ -72,3 +73,29 @@ def fourth_product():
         price=110000.0,
         quantity=10
     )
+
+
+@pytest.fixture
+def product_with_total_price1():
+    return Product(
+        name="Samsung Galaxy S23 Ultra",
+        description="256GB, Серый цвет, 200MP камера",
+        price=180000.0,
+        quantity=5,
+        total_price=900000.0
+    )
+
+@pytest.fixture
+def product_with_total_price2():
+    return Product(
+        name="Iphone 15",
+        description="512GB, Gray space",
+        price=210000.0,
+        quantity=8,
+        total_price=1680000.0
+    )
+
+
+@pytest.fixture
+def task_iterator(first_category):
+    return ProductIterator(first_category)
