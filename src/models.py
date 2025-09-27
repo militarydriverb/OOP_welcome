@@ -12,6 +12,28 @@ class Product:
         self.__price = price
         self.quantity = quantity
 
+    def __str__(self):
+        """
+        Переопределение метода__str__, который возвращает строку в формате:
+        Название продукта, X руб. Остаток: X шт.
+        """
+        return (
+            f"{self.name}, "
+            f"{self.__price} руб., "
+            f"Остаток: {self.quantity} шт."
+        )
+
+    def __add__(self, other):
+        """
+        Метод для сложения двух экземпляров класса Product
+        возвращает сумму произведений цены на количество у двух объектов.
+        """
+        if isinstance(other, Product):
+            return (round(self.quantity * self.__price,) +
+                    round(other.quantity * other.__price,))
+        else:
+            return NotImplemented
+
     @classmethod
     def new_product(cls, product_dict: dict, existing_products: list):
         """
@@ -75,6 +97,25 @@ class Category:
         Category.category_count += 1
         Category.product_count += len(products) if products else 0
 
+    def __str__(self):
+        """
+        Метод для получения информации о категории
+        продуктов в виде строки Название категории, название продукта, цена, продуктов и
+        их количества, а также подсчитывается общее количество продуктов товаров на складе."""
+        quantity_sum = 0
+        for product in self.__products:
+            if product.quantity > 0:
+                quantity_sum += product.quantity
+            else:
+                self.__products.remove(product)
+        if self.__products:
+            return (
+                f"{self.name}, "
+                f"Количество продуктов: {quantity_sum} шт."
+            )
+        else:
+            return None
+
     def add_product(self, product: Product):
         """Метод для создания экземпляра класса на основе словаря"""
         if product not in self.__products:
@@ -83,11 +124,11 @@ class Category:
 
     @property
     def products(self):
-        """ Метод для получения списка продуктов"""
+        """ Метод для получения списка продуктов
+        и их вывода в виде строки"""
         products_str = ""
         for product in self.__products:
-            products_str += (f"{product.name}, {product.price} руб. "
-                             f"Остаток: {product.quantity} шт.\n")
+            products_str += f"{str(product)}\n"
         return products_str
 
     # @products.setter
@@ -111,41 +152,22 @@ if __name__ == "__main__":
     product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий",
                        31000.0, 14)  # pragma: no cover
 
+    print(str(product1))
+    print(str(product2))
+    print(str(product3))
+
     category1 = Category(
         "Смартфоны",
         "Смартфоны, как средство не только коммуникации, "
         "но и получения дополнительных функций для удобства жизни",
         [product1, product2, product3]
     )  # pragma: no cover
-    product_list = [product1, product2, product3,] # pragma: no cover
 
-    print(category1.products)# pragma: no cover
-    print(Category.category_count)  # pragma: no cover
-    print(category1.product_count) # pragma: no cover
+print()
+print(str(category1))  # pragma: no cover
+print()
+print(category1.products)  # pragma: no cover
 
-    product4 = Product("55\" QLED 4K", "Фоновая подсветка",
-                       123000.0, 7)  # pragma: no cover
-    category1.add_product(product4)  # pragma: no cover
-    print(category1.products) # pragma: no cover
-    print(Category.category_count)  # pragma: no cover
-    print(category1.product_count) # pragma: no cover
-
-    new_product = Product.new_product(
-        {"name": "Samsung Galaxy S23 Ultra",
-         "description": "256GB, Серый цвет, 200MP камера",
-         "price": 180000.0, "quantity": 5}, product_list)  # pragma: no cover
-    print(new_product.name)  # pragma: no cover
-    print(new_product.description)  # pragma: no cover
-    print(new_product.price)  # pragma: no cover
-    print(new_product.quantity)  # pragma: no cover
-
-    new_product.price = 800  # pragma: no cover
-    print(new_product.price)  # pragma: no cover
-
-    new_product.price = -100  # pragma: no cover
-    print(new_product.price)  # pragma: no cover
-    new_product.price = 0  # pragma: no cover
-    print(new_product.price)  # pragma: no cover
-
-    print(Category.category_count)  # pragma: no cover
-    print(Category.product_count)  # pragma: no cover
+print(product1 + product2)  # pragma: no cover
+print(product1 + product3)  # pragma: no cover
+print(product2 + product3)  # pragma: no cover
