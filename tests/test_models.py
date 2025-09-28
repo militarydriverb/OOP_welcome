@@ -1,5 +1,7 @@
+import pytest
+
 from src.models import Category, Product
-from tests.conftest import first_category, first_product, second_product, third_product, fourth_product
+from tests.conftest import first_category, second_category, first_product, second_product, third_product, fourth_product
 
 
 def test_category_init(first_category, second_category):
@@ -29,7 +31,7 @@ def test_category_products_property(first_category, second_category):
 
 def test_add_product(first_category, first_product):
     assert len(first_category.products_in_list) == 3
-    first_category.add_product = first_product
+    first_category.add_product = first_product  #= Добавляем продукт в список
     assert len(first_category.products_in_list) == 4
 
 
@@ -44,3 +46,27 @@ def test_product_init(first_product, second_product):
     assert second_product.description == "512GB, Gray space"
     assert second_product.price == 210000.0
     assert second_product.quantity == 8
+
+
+def test_products_str(first_product):
+        assert str(first_product) == "Samsung Galaxy S23 Ultra, 180000.0 руб. Остаток: 5 шт."
+
+
+def test_product_total_price(product_with_total_price1, product_with_total_price2):
+    assert product_with_total_price1 + product_with_total_price2 == 2580000
+
+
+def test_category_str(first_category):
+    assert str(first_category) == "Смартфоны, Количество продуктов: 27 шт."
+
+
+def test_product_iterator(product_iterator):
+    iter(product_iterator)
+    assert product_iterator.index == 0
+    assert next(product_iterator).name == "Samsung Galaxy S23 Ultra"
+    assert next(product_iterator).name == "Iphone 15"
+    assert next(product_iterator).name == "Xiaomi Redmi Note 11"
+
+    with pytest.raises(StopIteration):
+        next(product_iterator)
+
