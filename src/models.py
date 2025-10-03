@@ -1,7 +1,7 @@
 class Product:
     """Класс продукта"""
 
-    def __init__(self, name: str, description: str, price: float, quantity: int):
+    def __init__(self, name: str, description: str, price: float, quantity: int, total_price: float = 0):
         """
         Метод для инициализации (конструктор) экземпляра класса.
         Задаем значения атрибутам экземплярам.
@@ -10,6 +10,20 @@ class Product:
         self.description = description
         self.__price = price
         self.quantity = quantity
+        self.total_price = total_price
+
+    def __add__(self, other):
+        """
+         Метод для сложения двух экземпляров класса Product
+        возвращает сумму произведений цены на количество у двух объектов.
+        """
+        if isinstance(other, Product):
+            total_price = (round(self.quantity * self.__price,) +
+                    round(other.quantity * other.__price,))
+            return total_price
+        else:
+            return NotImplemented
+
 
     @classmethod
     def new_product(cls, product_dict: dict, existing_products: list):
@@ -86,7 +100,7 @@ class Smartphone(Product):
     def __add__(self, product: "Smartphone"):
         """функция сложения из продуктов класса Smartphone"""
         if type(product) is Smartphone:
-            return self.price * self.quantity + product.price * product.quantity
+            return Product.__add__(self, product)
         raise TypeError
 
 
@@ -111,7 +125,7 @@ class LawnGrass(Product):
     def __add__(self, product: "LawnGrass"):
         """функция сложения из продуктов класса LawnGrass"""
         if type(product) is LawnGrass:
-            return self.price * self.quantity + product.price * product.quantity
+            return Product.__add__(self, product)
         raise TypeError
 
 
