@@ -83,7 +83,7 @@ class Smartphone(Product):
         self.memory = memory
         self.color = color
 
-    def __add__(self, product: "Smartphone"):
+    def __add__(self, product: "Smartphone") -> float:
         """функция сложения из продуктов класса Smartphone"""
         if type(product) is Smartphone:
             return self.price * self.quantity + product.price * product.quantity
@@ -108,7 +108,7 @@ class LawnGrass(Product):
         self.germination_period = germination_period
         self.color = color
 
-    def __add__(self, product: "LawnGrass"):
+    def __add__(self, product: "LawnGrass") -> float:
         """функция сложения из продуктов класса LawnGrass"""
         if type(product) is LawnGrass:
             return self.price * self.quantity + product.price * product.quantity
@@ -141,8 +141,9 @@ class Category:
             if product not in self.__products:
                 self.__products.append(product)
                 Category.product_count += 1
-            else:
-                raise TypeError
+        else:
+            raise TypeError
+
 
     @property
     def products(self):
