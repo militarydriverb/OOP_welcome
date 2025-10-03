@@ -10,6 +10,30 @@ class Product:
         self.description = description
         self.__price = price
         self.quantity = quantity
+        self.total_price = total_price
+
+    def __str__(self):
+        """
+        Переопределение метода__str__, который возвращает строку в формате:
+        Название продукта, X руб. Остаток: X шт.
+        """
+        return (
+            f"{self.name}, "
+            f"{self.__price} руб., "
+            f"Остаток: {self.quantity} шт."
+        )
+
+    def __add__(self, other):
+        """
+        Метод для сложения двух экземпляров класса Product
+        возвращает сумму произведений цены на количество у двух объектов.
+        """
+        if isinstance(other, Product):
+            total_price = (round(self.quantity * self.__price,) +
+                    round(other.quantity * other.__price,))
+            return total_price
+        else:
+            return NotImplemented
 
     @classmethod
     def new_product(cls, product_dict: dict, existing_products: list):
@@ -131,6 +155,25 @@ class Category:
         self.__products = products if products else []
         Category.category_count += 1
         Category.product_count += len(products) if products else 0
+
+    def __str__(self):
+        """
+        Метод для получения информации о категории
+        продуктов в виде строки Название категории, название продукта, цена, продуктов и
+        их количества, а также подсчитывается общее количество продуктов товаров на складе."""
+        quantity_sum = 0
+        for product in self.__products:
+            if product.quantity > 0:
+                quantity_sum += product.quantity
+            else:
+                self.__products.remove(product)
+        if self.__products:
+            return (
+                f"{self.name}, "
+                f"Количество продуктов: {quantity_sum} шт."
+            )
+        else:
+            return None
 
     def add_product(self, product: Product):
         """Метод для создания экземпляра класса на основе словаря"""
