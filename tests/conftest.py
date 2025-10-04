@@ -2,7 +2,8 @@ import pytest
 
 from src.models import Category
 from src.models import Product
-from src.models import ProductIterator
+from src.models import Smartphone
+from src.models import LawnGrass
 
 """Создаем фикстуры для тестов"""
 
@@ -74,28 +75,52 @@ def fourth_product():
         quantity=10
     )
 
-
 @pytest.fixture
-def product_with_total_price1():
-    return Product(
-        name="Samsung Galaxy S23 Ultra",
-        description="256GB, Серый цвет, 200MP камера",
-        price=180000.0,
-        quantity=5,
-        total_price=900000.0
+def test_smartphone1():
+    return Smartphone(
+        "Samsung Galaxy S23 Ultra",
+        "256GB, Серый цвет, 200MP камера",
+        180000.0,
+        5,
+        95.5,
+        "S23 Ultra",
+        256,
+        "Серый",
     )
 
 @pytest.fixture
-def product_with_total_price2():
-    return Product(
-        name="Iphone 15",
-        description="512GB, Gray space",
-        price=210000.0,
-        quantity=8,
-        total_price=1680000.0
+def test_smartphone2():
+    return Smartphone(
+        "Iphone 15",
+        "512GB, Gray space",
+        210000.0,
+        8,
+        98.2,
+        "15",
+        512,
+        "Gray space"
     )
 
+@pytest.fixture
+def test_grass1():
+    return LawnGrass(
+        "Газонная трава",
+        "Элитная трава для газона",
+        500.0,
+        20,
+        "Россия",
+        "7 дней",
+        "Зеленый",
+    )
 
 @pytest.fixture
-def task_iterator(first_category):
-    return ProductIterator(first_category)
+def test_grass2():
+    return LawnGrass(
+        "Газонная трава 2",
+        "Выносливая трава",
+        450.0,
+        15,
+        "США",
+        "5 дней",
+        "Темно-зеленый",
+    )
