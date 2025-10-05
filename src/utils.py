@@ -7,7 +7,7 @@ from .models import Category, Product
 def read_json(file: str) -> dict:
     """Функция для чтения json файла."""
     full_file = os.path.abspath(file)
-    with open(full_file, 'r', encoding='UTF-8') as f:
+    with open(full_file, "r", encoding="UTF-8") as f:
         data = json.load(f)
     return data
 
@@ -17,9 +17,9 @@ def create_objects_from_json(data: dict):
     specs = []
     for spec in data:
         products = []
-        for product in spec['products']:
+        for product in spec["products"]:
             products.append(Product(**product))
-        spec['products'] = products
+        spec["products"] = products
         specs.append(Category(**spec))
 
     return specs
