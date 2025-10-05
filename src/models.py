@@ -30,6 +30,7 @@ class Product(BaseProduct, PrintMixin):
         self.__price = price
         self.quantity = quantity
         self.total_price = total_price
+        super().__init__()
 
     def __add__(self, other):
         """
@@ -202,12 +203,12 @@ class Category(BaseCategory):
         return self.__products
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     product1 = Product(
         "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
-    )
-    product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)
-    product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14)
+    )  # pragma: no cover
+    product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)  # pragma: no cover
+    product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14)  # pragma: no cover
 
     print(product1.name)  # pragma: no cover
     print(product1.description)  # pragma: no cover
@@ -237,7 +238,7 @@ if __name__ == "__main__":
     print(category1.category_count)  # pragma: no cover
     print(category1.product_count)  # pragma: no cover
 
-    product4 = Product('55" QLED 4K', "Фоновая подсветка", 123000.0, 7)
+    product4 = Product('55" QLED 4K', "Фоновая подсветка", 123000.0, 7)  # pragma: no cover
     category2 = Category(
         "Телевизоры",
         "Современный телевизор, который позволяет наслаждаться просмотром, "

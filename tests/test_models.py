@@ -38,7 +38,7 @@ def test_category_products_property(first_category, second_category):
 
 def test_add_product(first_category, first_product):
     assert len(first_category.products_in_list) == 3
-    first_category.add_product = first_product  #= Добавляем продукт в список
+    first_category.add_product(first_product)  #= Добавляем продукт в список
     assert len(first_category.products_in_list) == 4
 
 
