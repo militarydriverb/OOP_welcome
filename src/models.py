@@ -253,3 +253,4 @@ if __name__ == "__main__":  # pragma: no cover
 
     print(Category.category_count)  # pragma: no cover
     print(Category.product_count)  # pragma: no cover
+

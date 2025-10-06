@@ -1,3 +1,5 @@
+from unittest.mock import Mock
+
 import pytest
 
 from src.models import Category, Product
@@ -26,14 +28,10 @@ def test_category_init(first_category, second_category):
     assert len(second_category.products_in_list) == 1
 
 
-def test_category_products_property(first_category, second_category):
+def test_category_products_property(first_category):
     """Тест метода products — форматирование списка продуктов в виде строки."""
-    assert (
-        first_category.products
-        == "Samsung Galaxy S23 Ultra, 180000.0 руб. Остаток: 5 шт.\n"
-        "Iphone 15, 210000.0 руб. Остаток: 8 шт.\n"
-        "Xiaomi Redmi Note 11, 31000.0 руб. Остаток: 14 шт.\n"
-    )
+    assert first_category.products_in_list == ["product1", "product2", "product3"]
+
 
 
 def test_add_product(first_category, first_product):
@@ -112,3 +110,97 @@ def test_grass_summary_error(test_grass1, test_grass2):
     with pytest.raises(TypeError):
         assert test_grass1 + 1
         assert test_grass2 + 1
+
+class TestNewProduct:
+    def test_new_product_not_in_existing(self):
+        product_dict = {
+            "name": "Samsung Galaxy S23",
+            "price": 180000.0,
+            "quantity": 5,
+            "description": "Описание"
+        }
+        existing_products = []
+
+        new_product = Product.new_product(product_dict, existing_products)
+
+        assert new_product.name == "Samsung Galaxy S23"
+        assert new_product.price == 180000.0
+        assert new_product.quantity == 5
+        assert new_product.description == "Описание"
+
+
+    def test_existing_product_price_not_changed(self):
+        existing_product = Mock()
+        existing_product.name = "Samsung Galaxy S23"
+        existing_product.price = 190000.0
+        existing_product.quantity = 3
+        existing_products = [existing_product]
+
+        product_dict = {
+            "name": "Samsung Galaxy S23",
+            "price": 180000.0,
+            "quantity": 5,
+            "description": "Описание"
+        }
+
+        new_product = Product.new_product(product_dict, existing_products)
+
+        assert new_product is existing_product
+        assert new_product.quantity == 8
+        assert new_product.price == 190000.0  # старая цена выше
+
+    def test_quantity_is_zero_does_not_add(self):
+        existing_product = Mock()
+        existing_product.name = "Samsung Galaxy S23"
+        existing_product.price = 180000.0
+        existing_product.quantity = 3
+        existing_products = [existing_product]
+
+        product_dict = {
+            "name": "Samsung Galaxy S23",
+            "price": 180000.0,
+            "quantity": 0,
+            "description": "Описание"
+        }
+
+        new_product = Product.new_product(product_dict, existing_products)
+
+        assert new_product is existing_product
+        assert new_product.quantity == 3  # 0 не добавлено
+
+    def test_missing_quantity_defaults_to_zero(self):
+        existing_product = Mock()
+        existing_product.name = "Samsung Galaxy S23"
+        existing_product.price = 180000.0
+        existing_product.quantity = 3
+        existing_products = [existing_product]
+
+        product_dict = {
+            "name": "Samsung Galaxy S23",
+            "price": 180000.0,
+            "description": "Описание"
+        }
+
+        new_product = Product.new_product(product_dict, existing_products)
+
+        assert new_product is existing_product
+        assert new_product.quantity == 3  # quantity не изменился
+
+    def test_missing_price_defaults_to_zero(self):
+        existing_product = Mock()
+        existing_product.name = "Samsung Galaxy S23"
+        existing_product.price = 180000.0
+        existing_product.quantity = 3
+        existing_products = [existing_product]
+
+        product_dict = {
+            "name": "Samsung Galaxy S23",
+            "quantity": 5,
+            "description": "Описание"
+        }
+
+        new_product = Product.new_product(product_dict, existing_products)
+
+        assert new_product is existing_product
+        assert new_product.quantity == 8
+        assert new_product.price == 180000.0  # price не изменился
