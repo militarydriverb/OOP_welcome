@@ -3,8 +3,8 @@ from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent))
 from src.base_category import BaseCategory
-from src.print_mixin import PrintMixin
 from src.base_product import BaseProduct
+from src.print_mixin import PrintMixin
 
 
 class Product(BaseProduct, PrintMixin):
@@ -28,7 +28,10 @@ class Product(BaseProduct, PrintMixin):
         self.name = name
         self.description = description
         self.__price = price
-        self.quantity = quantity
+        if quantity > 0:
+            self.quantity = quantity
+        else:
+            raise ValueError("Товар с нулевым количеством не может быть добавлен.")
         self.total_price = total_price
         super().__init__()
 
@@ -202,25 +205,52 @@ class Category(BaseCategory):
     def products_in_list(self):
         return self.__products
 
+    def middle_price(self):
+        try:
+            return round(
+                sum([product.price for product in self.__products])
+                / len(self.__products),
+                2,
+            )
+        except ZeroDivisionError:
+            return 0
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     try:
-        product_invalid = Product("Бракованный товар", "Неверное количество", 1000.0, 0) # pragma: no cover
-    except ValueError as e: # pragma: no cover
+        product_invalid = Product(
+            "Бракованный товар", "Неверное количество", 1000.0, 0
+        )  # pragma: no cover
+    except ValueError as e:  # pragma: no cover
         print(
-            "Возникла ошибка ValueError прерывающая работу программы при попытке добавить продукт с нулевым количеством"
-        ) # pragma: no cover
+            "Возникла ошибка ValueError прерывающая работу программы при попытке добавить продукт с нулевым количеством\n"
+            "Если следовать условию задачи, для остановки программы необходимо использовать raise SystemExit("
+            "),\n"
+            "однако для проверки всего проверочного кода используется raise ValueError("
+            "):"
+        )  # pragma: no cover
     else:
-        print("Не возникла ошибка ValueError при попытке добавить продукт с нулевым количеством") # pragma: no cover
+        print(
+            "Не возникла ошибка ValueError при попытке добавить продукт с нулевым количеством"
+        )  # pragma: no cover
 
-    product1 = Product("Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5) # pragma: no cover
-    product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8) # pragma: no cover
-    product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14) # pragma: no cover
+    product1 = Product(
+        "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
+    )  # pragma: no cover
+    product2 = Product(
+        "Iphone 15", "512GB, Gray space", 210000.0, 8
+    )  # pragma: no cover
+    product3 = Product(
+        "Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14
+    )  # pragma: no cover
 
-    category1 = Category("Смартфоны", "Категория смартфонов", [product1, product2, product3]) # pragma: no cover
+    category1 = Category(
+        "Смартфоны", "Категория смартфонов", [product1, product2, product3]
+    )  # pragma: no cover
 
-    print(category1.middle_price()) # pragma: no cover
+    print(category1.middle_price())  # pragma: no cover
 
-    category_empty = Category("Пустая категория", "Категория без продуктов", []) # pragma: no cover
-    print(category_empty.middle_price()) # pragma: no cover
-
+    category_empty = Category(
+        "Пустая категория", "Категория без продуктов", []
+    )  # pragma: no cover
+    print(category_empty.middle_price())  # pragma: no cover
