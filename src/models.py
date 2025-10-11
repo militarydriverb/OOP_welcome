@@ -1,7 +1,26 @@
-class Product:
-    """Класс продукта"""
+import sys
+from pathlib import Path
 
-    def __init__(self, name: str, description: str, price: float, quantity: int, total_price: float = 0):
+sys.path.append(str(Path(__file__).parent.parent))
+from src.base_category import BaseCategory
+from src.print_mixin import PrintMixin
+from src.base_product import BaseProduct
+
+
+class Product(BaseProduct, PrintMixin):
+    """
+    Класс продукта, в который подключена цепочка наследования
+    от базового класса BaseProduct и от класса PrintMixin
+    """
+
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        total_price: float = 0,
+    ):
         """
         Метод для инициализации (конструктор) экземпляра класса.
         Задаем значения атрибутам экземплярам.
@@ -11,6 +30,7 @@ class Product:
         self.__price = price
         self.quantity = quantity
         self.total_price = total_price
+        super().__init__()
 
     def __add__(self, other):
         """
@@ -18,12 +38,14 @@ class Product:
         возвращает сумму произведений цены на количество у двух объектов.
         """
         if isinstance(other, Product):
-            total_price = (round(self.quantity * self.__price,) +
-                    round(other.quantity * other.__price,))
+            total_price = round(
+                self.quantity * self.__price,
+            ) + round(
+                other.quantity * other.__price,
+            )
             return total_price
         else:
             return NotImplemented
-
 
     @classmethod
     def new_product(cls, product_dict: dict, existing_products: list):
@@ -129,8 +151,11 @@ class LawnGrass(Product):
         raise TypeError
 
 
-class Category:
-    """Класс категория продукта"""
+class Category(BaseCategory):
+    """
+    Класс категория продукта, в который подключена цепочка наследования
+    от базового класса BaseCategory
+    """
 
     category_count = 0
     product_count = 0
@@ -158,7 +183,6 @@ class Category:
         else:
             raise TypeError
 
-
     @property
     def products(self):
         """Метод для получения списка продуктов"""
@@ -179,139 +203,54 @@ class Category:
         return self.__products
 
 
-if __name__ == "__main__":
-    smartphone1 = Smartphone(
-        "Samsung Galaxy S23 Ultra",
-        "256GB, Серый цвет, 200MP камера",
-        180000.0,
-        5,
-        95.5,
-        "S23 Ultra",
-        256,
-        "Серый",
+if __name__ == "__main__":  # pragma: no cover
+    product1 = Product(
+        "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
     )  # pragma: no cover
-    smartphone2 = Smartphone(
-        "Iphone 15", "512GB, Gray space", 210000.0, 8, 98.2, "15", 512, "Gray space"
-    )  # pragma: no cover
-    smartphone3 = Smartphone(
-        "Xiaomi Redmi Note 11",
-        "1024GB, Синий",
-        31000.0,
-        14,
-        90.3,
-        "Note 11",
-        1024,
-        "Синий",
-    )  # pragma: no cover
-    print()  # pragma: no cover
-    print(smartphone1.name)  # pragma: no cover
-    print(smartphone1.description)  # pragma: no cover
-    print(smartphone1.price)  # pragma: no cover
-    print(smartphone1.quantity)  # pragma: no cover
-    print(smartphone1.efficiency)  # pragma: no cover
-    print(smartphone1.model)  # pragma: no cover
-    print(smartphone1.memory)  # pragma: no cover
-    print(smartphone1.color)  # pragma: no cover
+    product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)  # pragma: no cover
+    product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14)  # pragma: no cover
 
-    print()  # pragma: no cover
-    print(smartphone2.name)  # pragma: no cover
-    print(smartphone2.description)  # pragma: no cover
-    print(smartphone2.price)  # pragma: no cover
-    print(smartphone2.quantity)  # pragma: no cover
-    print(smartphone2.efficiency)  # pragma: no cover
-    print(smartphone2.model)  # pragma: no cover
-    print(smartphone2.memory)  # pragma: no cover
-    print(smartphone2.color)  # pragma: no cover
+    print(product1.name)  # pragma: no cover
+    print(product1.description)  # pragma: no cover
+    print(product1.price)  # pragma: no cover
+    print(product1.quantity)  # pragma: no cover
 
-    print()  # pragma: no cover
-    print(smartphone3.name)  # pragma: no cover
-    print(smartphone3.description)  # pragma: no cover
-    print(smartphone3.price)  # pragma: no cover
-    print(smartphone3.quantity)  # pragma: no cover
-    print(smartphone3.efficiency)  # pragma: no cover
-    print(smartphone3.model)  # pragma: no cover
-    print(smartphone3.memory)  # pragma: no cover
-    print(smartphone3.color)  # pragma: no cover
+    print(product2.name)  # pragma: no cover
+    print(product2.description)  # pragma: no cover
+    print(product2.price)  # pragma: no cover
+    print(product2.quantity)  # pragma: no cover
 
-    grass1 = LawnGrass(
-        "Газонная трава",
-        "Элитная трава для газона",
-        500.0,
-        20,
-        "Россия",
-        "7 дней",
-        "Зеленый",
-    )  # pragma: no cover
-    grass2 = LawnGrass(
-        "Газонная трава 2",
-        "Выносливая трава",
-        450.0,
-        15,
-        "США",
-        "5 дней",
-        "Темно-зеленый",
-    )  # pragma: no cover
-    print()  # pragma: no cover
-    print(grass1.name)  # pragma: no cover
-    print(grass1.description)  # pragma: no cover
-    print(grass1.price)  # pragma: no cover
-    print(grass1.quantity)  # pragma: no cover
-    print(grass1.country)  # pragma: no cover
-    print(grass1.germination_period)  # pragma: no cover
-    print(grass1.color)  # pragma: no cover
+    print(product3.name)  # pragma: no cover
+    print(product3.description)  # pragma: no cover
+    print(product3.price)  # pragma: no cover
+    print(product3.quantity)  # pragma: no cover
 
-    print()  # pragma: no cover
-    print(grass2.name)  # pragma: no cover
-    print(grass2.description)  # pragma: no cover
-    print(grass2.price)  # pragma: no cover
-    print(grass2.quantity)  # pragma: no cover
-    print(grass2.country)  # pragma: no cover
-    print(grass2.germination_period)  # pragma: no cover
-    print(grass2.color)  # pragma: no cover
-
-    print()  # pragma: no cover
-    smartphone_sum = smartphone1 + smartphone2  # pragma: no cover
-    print(smartphone_sum)  # pragma: no cover
-
-    print()  # pragma: no cover
-    grass_sum = grass1 + grass2  # pragma: no cover
-    print(grass_sum)  # pragma: no cover
-
-    print()  # pragma: no cover
-    try:  # pragma: no cover
-        invalid_sum = smartphone1 + grass1  # pragma: no cover
-    except TypeError:  # pragma: no cover
-        print("Возникла ошибка TypeError " "при попытке сложения")  # pragma: no cover
-    else:  # pragma: no cover
-        print(
-            "Не возникла ошибка TypeError " "при попытке сложения"
-        )  # pragma: no cover
-
-    category_smartphones = Category(
-        "Смартфоны", "Высокотехнологичные смартфоны", [smartphone1, smartphone2]
-    )  # pragma: no cover
-    category_grass = Category(
-        "Газонная трава", "Различные виды газонной травы", [grass1, grass2]
+    category1 = Category(
+        "Смартфоны",
+        "Смартфоны, как средство не только коммуникации, "
+        "но и получения дополнительных функций для удобства жизни",
+        [product1, product2, product3],
     )  # pragma: no cover
 
-    category_smartphones.add_product(smartphone3)  # pragma: no cover
+    print(category1.name == "Смартфоны")  # pragma: no cover
+    print(category1.description)  # pragma: no cover
+    print(len(category1.products_in_list))  # pragma: no cover
+    print(category1.category_count)  # pragma: no cover
+    print(category1.product_count)  # pragma: no cover
 
-    print()  # pragma: no cover
-    print(category_smartphones.products)  # pragma: no cover
+    product4 = Product('55" QLED 4K', "Фоновая подсветка", 123000.0, 7)  # pragma: no cover
+    category2 = Category(
+        "Телевизоры",
+        "Современный телевизор, который позволяет наслаждаться просмотром, "
+        "станет вашим другом и помощником",
+        [product4],
+    )  # pragma: no cover
 
-    print()
-    print(category_grass.products)  # pragma: no cover
+    print(category2.name)  # pragma: no cover
+    print(category2.description)  # pragma: no cover
+    print(len(category2.products_in_list))  # pragma: no cover
+    print(category2.products)  # pragma: no cover
 
-    print()  # pragma: no cover
+    print(Category.category_count)  # pragma: no cover
     print(Category.product_count)  # pragma: no cover
 
-    try:  # pragma: no cover
-        category_smartphones.add_product("Not a product")  # pragma: no cover
-    except TypeError:  # pragma: no cover
-        print(
-            "Возникла ошибка TypeError при добавлении не продукта"
-        )  # pragma: no cover
-    else:  # pragma: no cover
-        print(
-            "Не возникла ошибка TypeError при добавлении не продукта"
-        )  # pragma: no cover

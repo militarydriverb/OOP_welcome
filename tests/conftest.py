@@ -31,9 +31,7 @@ def second_category():
                     "просмотром, станет вашим другом и помощником",
         products=['product4']
         )
-    #         Product("55\" QLED 4K, Фоновая подсветка,123000.0 руб. Остаток: 7 шт.\n"),
-    #     ]
-    # )
+
 
 
 @pytest.fixture
