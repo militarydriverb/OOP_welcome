@@ -3,7 +3,7 @@ from unittest.mock import Mock
 import pytest
 
 from src.models import Category, Product
-from tests.conftest import first_category, first_product, second_product
+from tests.conftest import first_category, first1_category, first_product, second_product
 
 
 def test_category_init(first_category, second_category):
@@ -204,3 +204,17 @@ class TestNewProduct:
         assert new_product is existing_product
         assert new_product.quantity == 8
         assert new_product.price == 180000.0  # price не изменился
+
+def test_middle_price(first1_category, category_with_no_products):
+    assert first1_category.middle_price() == 140333.33
+    assert category_with_no_products.middle_price() == 0.0
+
+
+def test_custom_exception(capsys, first1_category):
+    assert len(first1_category.products_in_list) == 3
+
+    add_product = Product("Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 0)
+    first1_category.products_in_list = add_product
+    message = capsys.readouterr()
+    assert message.out.strip().split('\n')[-2] == "Товар с нулевым количеством не может быть добавлен."
+    assert message.out.strip().split("\n")[-1] == "Обработка заказа завершена."
